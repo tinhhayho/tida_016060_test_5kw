@@ -1,0 +1,5 @@
+# FIXED
+
+tida_01606_Relay_Fan_control.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/source/tida_01606_Relay_Fan_control.c
+
+C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/source/tida_01606_Relay_Fan_control.c: 

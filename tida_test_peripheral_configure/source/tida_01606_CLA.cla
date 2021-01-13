@@ -1,0 +1,118 @@
+
+//#############################################################################
+//
+// FILE:   tida_01606_adc.h
+//
+// TITLE: configure adc subsystem for tida 01606 board
+//        refer to Texas Instruments
+//        
+//
+//#############################################################################
+// $Pelab Release: $
+// $Release Date: $
+// $Copyright: $
+//#############################################################################
+
+
+#include "tida_01606_CLA.h"
+
+
+
+
+__attribute__((interrupt)) void Cla1Task1(void)
+{
+
+    adcValue.TIDA_IA = RESULT_IA_CLA;
+    adcValue.TIDA_IB = RESULT_IB_CLA;
+    adcValue.TIDA_IC = RESULT_IC_CLA;
+
+    adcValue.TIDA_VDC_BUS = RESULT_VBUS_CLA;
+    adcValue.TIDA_UINV_A  = RESULT_VINV_A_CLA;
+    adcValue.TIDA_UINV_B  = RESULT_VINV_B_CLA;
+    adcValue.TIDA_UINV_C  = RESULT_VINV_C_CLA;
+
+    adcValue.TIDA_UGRID_A = RESULT_VGRID_A_CLA;
+    adcValue.TIDA_UGRID_B = RESULT_VGRID_B_CLA;
+    adcValue.TIDA_UGRID_C = RESULT_VGRID_C_CLA;
+
+
+
+    adcValue.TIDA_TEMPAMP = RESULT_TEMPAMB_CLA;
+    adcValue.TIDA_TEMPA = RESULT_TEMPA_CLA;
+    adcValue.TIDA_TEMPB = RESULT_TEMPB_CLA;
+    adcValue.TIDA_TEMPC = RESULT_TEMPC_CLA;
+
+
+    UA = 20*CLAsin(angle);
+    UB = 20*CLAsin(angle + 1.57079632679f);
+
+    angle = angle +0.01570796326f;
+    if(angle > 6.28318530718f) angle = -6.28318530718f;
+
+}
+
+
+__attribute__((interrupt)) void Cla1Task2(void)
+{
+}
+__attribute__((interrupt)) void Cla1Task3(void)
+{
+
+}
+__attribute__((interrupt)) void Cla1Task4(void)
+{
+
+}
+__attribute__((interrupt)) void Cla1Task5(void)
+{
+
+}
+__attribute__((interrupt)) void Cla1Task6(void)
+{
+
+}
+__attribute__((interrupt)) void Cla1Task7(void)
+{
+
+}
+__attribute__((interrupt)) void Cla1Task8(void)
+{
+
+    UA = 0;
+    UB = 0;
+
+    angle = -6.28318530718;
+    adcValue.TIDA_IA = 0;
+    adcValue.TIDA_IB = 0;
+    adcValue.TIDA_IC = 0;
+
+    adcValue.TIDA_VDC_BUS = 0;
+    adcValue.TIDA_UINV_A  = 0;
+    adcValue.TIDA_UINV_B  = 0;
+    adcValue.TIDA_UINV_C  = 0;
+
+    adcValue.TIDA_UGRID_A = 0;
+    adcValue.TIDA_UGRID_B = 0;
+    adcValue.TIDA_UGRID_C = 0;
+
+
+
+    adcValue.TIDA_TEMPAMP = 0;
+
+    adcValue.TIDA_TEMPA = 0;
+    adcValue.TIDA_TEMPB = 0;
+    adcValue.TIDA_TEMPC = 0;
+
+
+
+}
+
+//
+// End of file
+//
+
+
+
+
+
+

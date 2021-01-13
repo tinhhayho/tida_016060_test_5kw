@@ -1,0 +1,31 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${default}",
+                "C:\\Users\\Tinh_deptrai\\workspace_v10\\pelab_demo_tida_01606\\TI_header_file\\common\\include\\",
+                "C:\\Users\\Tinh_deptrai\\workspace_v10\\pelab_demo_tida_01606\\TI_header_file\\header\\include\\",
+                "C:\\Users\\Tinh_deptrai\\workspace_v10\\pelab_demo_tida_01606\\tida_test_peripheral_configure\\inc",
+                "C:\\Users\\Tinh_deptrai\\workspace_v10\\pelab_demo_tida_01606\\tida_test_algorithm_configure\\inc"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "__interrupt = static",
+                "_LAUNCHXL_F28379D = 1",
+                "CPU1=1",
+                "_TEST_OPEN_LOOP_ = 1",
+                "_RAM_LOAD_TEST_OPEN_LOOP_ = 1",
+                "_TEST_SPEED_ = 1"
+            ],
+            "windowsSdkVersion": "10.0.18362.0",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x86",
+            "compilerPath": "C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-c2000_20.2.0.LTS/bin/cl.exe",
+            "cStandard": "c17"
+        }
+    ],
+    "version": 4
+}
