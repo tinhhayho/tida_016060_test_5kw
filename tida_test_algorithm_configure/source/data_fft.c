@@ -48,8 +48,8 @@ float data_analysis[buffer_size];
 #pragma DATA_SECTION(adcValue, "Cla1ToCpuMsgRAM")
 CLA_ADC_VALUE adcValue;
 
-float a ;
-float b;
+Uint16 a = 0;
+
 
 
 //
@@ -249,29 +249,36 @@ __interrupt void cla1Isr1 ()
     AdcdRegs.ADCINTFLGCLR.bit.ADCINT4   = 1;
     PieCtrlRegs.PIEACK.all = M_INT10|M_INT11;
 
-/*
-    if (j>10)
+
+    if (j)
     {
-        asm(" ESTOP0");
+        data_analysis[i] = adcValue.TIDA_UGRID_A;
+        //asm(" ESTOP0");
     }
     else
     {
-        data_analysis[i] = Cn;
+        ;
     }
     i++;
     if (i>4095)
     {
         i = 0;
-        j++;
     }
-*/
-    a = (float)(AdccResultRegs.ADCRESULT1*3.268/4096);
-    b = (float)(AdcbResultRegs.ADCRESULT10*3.268/4096);
 
+    EALLOW;
+    if(a)
+    {
+        GpioDataRegs.GPBSET.bit.GPIO43 = 1;
+    }
+    else
+    {
+        GpioDataRegs.GPBCLEAR.bit.GPIO43 = 1;
+    }
+    EDIS;
 
     pinput->ua = UA;
     pinput->ub = UB;
-//    svm_gen(pinput, psector, ptime_v, ptime_out, pepwm_count);
+    svm_gen(pinput, psector, ptime_v, ptime_out, pepwm_count);
 
     EALLOW;
     GpioDataRegs.GPBTOGGLE.bit.GPIO35 = 1;

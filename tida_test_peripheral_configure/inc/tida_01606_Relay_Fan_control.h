@@ -36,9 +36,13 @@
 
 
 
+//
+//  function prototype
+//
 
 
 
+void tida_setup_relay(void);
 
 
 #endif

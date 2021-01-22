@@ -45,7 +45,6 @@
 
 
 
-#define TIDA_PRO_STATE_RDY              GpioDataRegs.GPADAT.bit.GPIO26
 
 
 

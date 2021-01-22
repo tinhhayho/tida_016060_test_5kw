@@ -19,6 +19,7 @@
 #include "tida_01606_adc.h"
 #include "tida_01606_ePWM_power_driver_card.h"
 #include "tida_01606_protection.h"
+#include "tida_01606_Relay_Fan_control.h"
 #include "tida_01606_ePWM_svm.h"
 #include "tida_01606_CLA.h"
 

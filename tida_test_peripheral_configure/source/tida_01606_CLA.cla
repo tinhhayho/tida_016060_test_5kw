@@ -43,8 +43,8 @@ __attribute__((interrupt)) void Cla1Task1(void)
     adcValue.TIDA_TEMPC = RESULT_TEMPC_CLA;
 
 
-    UA = 20*CLAsin(angle);
-    UB = 20*CLAsin(angle + 1.57079632679f);
+    UA = 110*CLAsin(angle);
+    UB = 110*CLAsin(angle + 1.57079632679f);
 
     angle = angle +0.01570796326f;
     if(angle > 6.28318530718f) angle = -6.28318530718f;

@@ -34,6 +34,7 @@ void main(void)
 //            DisablePeripheralClocks();
     // protection fisrt
         Power_card_protect();
+        tida_setup_relay();
     // CLA configure 
         configCLAMemory();
         initCPU1CLA1();

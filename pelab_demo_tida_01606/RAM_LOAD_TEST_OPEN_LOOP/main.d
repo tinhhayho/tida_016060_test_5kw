@@ -54,6 +54,7 @@ main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_fi
 main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_adc.h
 main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_ePWM_power_driver_card.h
 main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_protection.h
+main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_Relay_Fan_control.h
 main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_ePWM_svm.h
 main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_CLA.h
 main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/include/F2837xD_Cla_defines.h
@@ -114,6 +115,7 @@ C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/header/
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_adc.h: 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_ePWM_power_driver_card.h: 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_protection.h: 
+C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_Relay_Fan_control.h: 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_ePWM_svm.h: 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_CLA.h: 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/include/F2837xD_Cla_defines.h: 
