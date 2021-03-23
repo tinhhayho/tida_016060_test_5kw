@@ -109,27 +109,26 @@
 #define TIDA_TEMPC_PIN                      2
 #define TIDA_TEMPAMP_PIN                    3
 
-// SYS CLK FOR ACQPS ---> 100ns and sysclk = 200mhz
-// 100*10E-9*200*10E6 = 20 
 
-#define TIDA_IA_ACQPS                       19
-#define TIDA_IB_ACQPS                       19
-#define TIDA_IC_ACQPS                       19
 
-#define TIDA_UA_INV_ACQPS                   19
-#define TIDA_UB_INV_ACQPS                   19
-#define TIDA_UC_INV_ACQPS                   19
+#define TIDA_IA_ACQPS                       74
+#define TIDA_IB_ACQPS                       74
+#define TIDA_IC_ACQPS                       74
 
-#define TIDA_UA_GRID_ACQPS                  19
-#define TIDA_UB_GRID_ACQPS                  19
-#define TIDA_UC_GRID_ACQPS                  19
+#define TIDA_UA_INV_ACQPS                   74
+#define TIDA_UB_INV_ACQPS                   74
+#define TIDA_UC_INV_ACQPS                   74
 
-#define TIDA_VBUS_ACQPS                     19
+#define TIDA_UA_GRID_ACQPS                  74
+#define TIDA_UB_GRID_ACQPS                  74
+#define TIDA_UC_GRID_ACQPS                  74
 
-#define TIDA_TEMPA_ACQPS                    19
-#define TIDA_TEMPB_ACQPS                    19
-#define TIDA_TEMPC_ACQPS                    19
-#define TIDA_TEMPAMP_ACQPS                  19
+#define TIDA_VBUS_ACQPS                     108
+
+#define TIDA_TEMPA_ACQPS                    99
+#define TIDA_TEMPB_ACQPS                    99
+#define TIDA_TEMPC_ACQPS                    99
+#define TIDA_TEMPAMP_ACQPS                  99
 
 
 
@@ -142,6 +141,7 @@
 //read adc result
 //
 
+/*
 #define RESULT_IA                 (float)(AdcaResultRegs.ADCRESULT0*TIDA_VREF_HIGH/4096)
 #define RESULT_VGRID_A            (float)(AdcaResultRegs.ADCRESULT3*TIDA_VREF_HIGH/4096)
 #define RESULT_VINV_A             (float)(AdcaResultRegs.ADCRESULT6*TIDA_VREF_HIGH/4096)
@@ -162,7 +162,7 @@
 #define RESULT_TEMPC              (float)(AdcbResultRegs.ADCRESULT12*TIDA_VREF_HIGH/4096)
 #define RESULT_TEMPAMB            (float)(AdcbResultRegs.ADCRESULT13*TIDA_VREF_HIGH/4096)
 
-
+*/
 
 
 //
@@ -170,6 +170,8 @@
 //
 extern void AdcSetMode(Uint16 adc, Uint16 resolution, Uint16 signalmode);
 
+
+extern __interrupt void adcIsr1();
 
 
 void tida_setupADC(void);

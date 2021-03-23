@@ -26,6 +26,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>DCL_PI_L1.asm</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/TI_header_file/Lib/DCL_lib/DCL_PI_L1.asm</locationURI>
+		</link>
+		<link>
 			<name>F2837xD_Adc.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/TI_header_file/common/source/F2837xD_Adc.c</locationURI>

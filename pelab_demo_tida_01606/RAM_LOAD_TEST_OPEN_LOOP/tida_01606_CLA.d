@@ -50,6 +50,8 @@ tida_01606_CLA.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI
 tida_01606_CLA.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/header/include/F2837xD_xint.h
 tida_01606_CLA.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/include/F2837xD_Cla_defines.h
 tida_01606_CLA.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/header/include/CLAmath.h
+tida_01606_CLA.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/Lib_header/DCLCLA.h
+tida_01606_CLA.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/Lib_header/DCL.h
 tida_01606_CLA.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_algorithm_configure/inc/svm_gen.h
 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/source/tida_01606_CLA.cla: 
@@ -102,4 +104,6 @@ C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/header/
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/header/include/F2837xD_xint.h: 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/include/F2837xD_Cla_defines.h: 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/header/include/CLAmath.h: 
+C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/Lib_header/DCLCLA.h: 
+C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/Lib_header/DCL.h: 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_algorithm_configure/inc/svm_gen.h: 

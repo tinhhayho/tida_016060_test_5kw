@@ -32,9 +32,9 @@ void tida_setup_relay(void)
     GpioCtrlRegs.GPBQSEL1.bit.GPIO34= TIDA_REL_INPUT_SYS;
     GpioCtrlRegs.GPBDIR.bit.GPIO34  = TIDA_REL_PIN_OUTPUT;
 
-    GpioDataRegs.GPBSET.bit.GPIO34  = 1;
-
-
+    GpioDataRegs.GPBSET.bit.GPIO34  = 0;
+    GpioDataRegs.GPBSET.bit.GPIO39  = 0;
+    GpioDataRegs.GPBSET.bit.GPIO44  = 0;
     //
     // configure Relay B - active high - GPIO39
     //
@@ -43,7 +43,7 @@ void tida_setup_relay(void)
     GpioCtrlRegs.GPBQSEL1.bit.GPIO39= TIDA_REL_INPUT_SYS;
     GpioCtrlRegs.GPBDIR.bit.GPIO39  = TIDA_REL_PIN_OUTPUT;
 
-    GpioDataRegs.GPBSET.bit.GPIO39  = 1;
+    GpioDataRegs.GPBSET.bit.GPIO39  = 0;
 
 
     //
@@ -54,7 +54,7 @@ void tida_setup_relay(void)
     GpioCtrlRegs.GPBQSEL1.bit.GPIO44= TIDA_REL_INPUT_SYS;
     GpioCtrlRegs.GPBDIR.bit.GPIO44  = TIDA_REL_PIN_OUTPUT;
 
-    GpioDataRegs.GPBSET.bit.GPIO44  = 1;
+    GpioDataRegs.GPBSET.bit.GPIO44  = 0;
 
 
 
@@ -68,7 +68,7 @@ void tida_setup_relay(void)
     GpioCtrlRegs.GPBQSEL1.bit.GPIO45= TIDA_REL_INPUT_SYS;
     GpioCtrlRegs.GPBDIR.bit.GPIO45  = TIDA_REL_PIN_OUTPUT;
 
-    GpioDataRegs.GPBSET.bit.GPIO45  = 1;
+    GpioDataRegs.GPBSET.bit.GPIO45  = 0;
 
 
     EDIS;

@@ -16,44 +16,235 @@
 
 #include "tida_01606_CLA.h"
 
+#define osg_k   0.2
+#define osg_b0  0.005467391333812f
+#define osg_b2  -0.005467391333812f
+#define osg_a1  1.988819841383109f
+#define osg_a2  - 0.989065217332375f
+#define osg_qb0 4.294079112151275e-05f
+#define osg_qb1 8.588158224302551e-05f
+#define osg_qb2 4.294079112151275e-05f
+#define fn      50.0f
+#define B0      166.877556
+#define B1      -166.322444
+#define kid1    15.319
+#define kid2    - 15.2562
+#define kiq1    15.319
+#define kiq2    - 15.2562
 
+SOGI_ alpha, beta;
+CURRENT_LOOP_var current_var;
+
+CLARKE_var clarke_var;
+PARK_var   park_var;
+
+
+#define _PLL_CODE_       1
+#define _CLARKE_TRANSFORM_      1
+#define  _PARK_TRANSFORM_I_         1
+#define _I_CONTROL_NOT_SOFT_START_
+
+#define pi            3.14159265359
+#define clarke_coeff    0.81649658092   //sqrt(2/3)
+
+// PI CONTROL DCL
 
 
 __attribute__((interrupt)) void Cla1Task1(void)
 {
+//    __mdebugstop();
+#ifdef  _CLARKE_TRANSFORM_
 
-    adcValue.TIDA_IA = RESULT_IA_CLA;
-    adcValue.TIDA_IB = RESULT_IB_CLA;
-    adcValue.TIDA_IC = RESULT_IC_CLA;
+    clarke_var.i_inv_alpha = clarke_coeff*(adcValue.TIDA_IA     - \
+                                           adcValue.TIDA_IB*0.5 - \
+                                           adcValue.TIDA_IC*0.5);
+    clarke_var.i_inv_beta  = clarke_coeff*(0.86602540378*adcValue.TIDA_IB - \
+                                           0.86602540378*adcValue.TIDA_IC);
 
-    adcValue.TIDA_VDC_BUS = RESULT_VBUS_CLA;
-    adcValue.TIDA_UINV_A  = RESULT_VINV_A_CLA;
-    adcValue.TIDA_UINV_B  = RESULT_VINV_B_CLA;
-    adcValue.TIDA_UINV_C  = RESULT_VINV_C_CLA;
-
-    adcValue.TIDA_UGRID_A = RESULT_VGRID_A_CLA;
-    adcValue.TIDA_UGRID_B = RESULT_VGRID_B_CLA;
-    adcValue.TIDA_UGRID_C = RESULT_VGRID_C_CLA;
-
+    clarke_var.v_inv_alpha = clarke_coeff*(adcValue.TIDA_UINV_A     - \
+                                           0.5*adcValue.TIDA_UINV_B - \
+                                           0.5*adcValue.TIDA_UINV_C);
 
 
-    adcValue.TIDA_TEMPAMP = RESULT_TEMPAMB_CLA;
-    adcValue.TIDA_TEMPA = RESULT_TEMPA_CLA;
-    adcValue.TIDA_TEMPB = RESULT_TEMPB_CLA;
-    adcValue.TIDA_TEMPC = RESULT_TEMPC_CLA;
+    clarke_var.v_inv_beta  = clarke_coeff*(0.86602540378*adcValue.TIDA_UINV_B -     \
+                                           0.86602540378*adcValue.TIDA_UINV_C);
 
 
-    UA = 110*CLAsin(angle);
-    UB = 110*CLAsin(angle + 1.57079632679f);
+    clarke_var.v_grid_alpha = clarke_coeff*(adcValue.TIDA_UGRID_A -     \
+                                            0.5*adcValue.TIDA_UGRID_B - \
+                                            0.5*adcValue.TIDA_UGRID_C);
 
-    angle = angle +0.01570796326f;
+
+    clarke_var.v_grid_beta = clarke_coeff*(0.86602540378*adcValue.TIDA_UGRID_B -    \
+                                           0.86602540378*adcValue.TIDA_UGRID_C);
+
+
+
+#endif
+
+
+#ifdef _PLL_CODE_
+    alpha.u[0] = CLAdiv(clarke_var.v_grid_alpha,500.0f);
+    beta.u[0]  = CLAdiv(clarke_var.v_grid_beta,500.0f);
+    //-------------------------------//
+    // Orthogonal Signal Generator   //
+    //-------------------------------//
+    // alpha
+
+
+    alpha.osg_u[0] = osg_b0*(alpha.u[0] - alpha.u[2]) + \
+                    osg_a1*alpha.osg_u[1] + osg_a2*alpha.osg_u[2];
+    alpha.osg_u[2] = alpha.osg_u[1];
+    alpha.osg_u[1] = alpha.osg_u[0];
+
+    alpha.osg_qu[0] = osg_qb0*alpha.u[0] +    \
+                    osg_qb1*alpha.u[1]      + \
+                    osg_qb2*alpha.u[2]      + \
+                    osg_a1*alpha.osg_qu[1]  + \
+                    osg_a2*alpha.osg_qu[2];
+
+    alpha.osg_qu[2] = alpha.osg_qu[1];
+    alpha.osg_qu[1] = alpha.osg_qu[0];
+
+    alpha.u[2] = alpha.u[1];
+    alpha.u[1] = alpha.u[0];
+
+    //-------------------------------//
+    // Orthogonal Signal Generator   //
+    //-------------------------------//
+    // beta
+    beta.osg_u[0] = osg_b0*( beta.u[0]-beta.u[2] ) +  \
+                    beta.osg_u[1]*osg_a1 +  beta.osg_u[2]*osg_a2;
+    beta.osg_u[2] = beta.osg_u[1];
+    beta.osg_u[1] = beta.osg_u[0];
+
+    beta.osg_qu[0] = osg_qb0*beta.u[0]      + \
+                    osg_qb1*beta.u[1]       + \
+                    osg_qb2*beta.u[2]       + \
+                    osg_a1*beta.osg_qu[1]  +  \
+                    osg_a2*beta.osg_qu[2];
+    beta.osg_qu[2] = beta.osg_qu[1];
+    beta.osg_qu[1] = beta.osg_qu[0];
+
+
+    beta.u[2] = beta.u[1];
+    beta.u[1] = beta.u[0];
+    //-------------------------------------------------------//
+    // Park Transform from alpha beta to d-q axis( align phase a)//
+    //-------------------------------------------------------//
+    pll.input_alpha = alpha.osg_u[0] - beta.osg_qu[0];
+    pll.input_beta = alpha.osg_qu[0] +  beta.osg_u[0];
+
+    pll.u_D[0] = pll.input_alpha*CLAcos(pll.theta[1]) + \
+                pll.input_beta*CLAsin(pll.theta[1]);
+    pll.u_Q[0] = pll.input_alpha*-CLAsin(pll.theta[1]) + \
+                pll.input_beta*CLAcos(pll.theta[1]);
+
+
+    //---------------------------------//
+    // Loop Filter                     //
+    //---------------------------------//
+    pll.ylf[0] = pll.ylf[1] + B0*pll.u_Q[0] + B1*pll.u_Q[1];
+    pll.ylf[1] = pll.ylf[0];
+    pll.u_Q[1] = pll.u_Q[0];
+    //---------------------------------//
+    // VCO                             //
+    //---------------------------------//
+    pll.fo = fn + pll.ylf[0];
+
+    pll.theta[0] = pll.theta[1] + pll.fo*0.00005*2*pi;
+    if(pll.theta[0]>2*3.14) pll.theta[0] = 0;
+    else                    pll.theta[0] = pll.theta[0];
+
+    pll.theta[1] = pll.theta[0];
+
+#endif
+
+
+
+
+
+// park transform for algorithm
+#ifdef _PARK_TRANSFORM_I_
+    park_var.id_inv  = clarke_var.i_inv_alpha*CLAcos(pll.theta[0]) +   \
+                       clarke_var.i_inv_beta *CLAsin(pll.theta[0]);
+    park_var.iq_inv  =-clarke_var.i_inv_alpha*CLAsin(pll.theta[0]) +   \
+                       clarke_var.i_inv_beta *CLAcos(pll.theta[0]);
+    //
+    park_var.vd_inv  = clarke_var.v_inv_alpha*CLAcos(pll.theta[0]) +   \
+                       clarke_var.v_inv_beta *CLAsin(pll.theta[0]);
+    park_var.vq_inv  =-clarke_var.v_inv_alpha*CLAsin(pll.theta[0]) +   \
+                       clarke_var.v_inv_beta *CLAcos(pll.theta[0]);
+
+#endif
+
+
+
+
+#ifdef _I_CONTROL_NOT_SOFT_START_
+    current_var.id_star = set_point;
+    ///---current loop---///
+    current_var.eid[0] = current_var.id_star - park_var.id_inv;
+    current_var.eiq[0] = current_var.iq_star - park_var.iq_inv;
+    // pi code  ( bilinear transform)
+   // pid > -15
+    // piq <  65
+    //vd_star < 50
+    //vq_star < -250
+
+
+    current_var.pid[0] = current_var.pid[1]   +   \
+                            kid1*current_var.eid[0]     +  \
+                            kid2*current_var.eid[1];
+    current_var.piq[0] = current_var.piq[1]     +   \
+                            kiq1*current_var.eiq[0] + \
+                            kiq2*current_var.eiq[1];
+    current_var.pid[1]  = current_var.pid[0];
+    current_var.piq[1]  = current_var.piq[0];
+    current_var.eid[1]  = current_var.eid[0];
+    current_var.eiq[1]  = current_var.eiq[0];
+    //---end of pi code---//
+    current_var.vd_star = current_var.pid[0] + park_var.vd_inv  - \
+                        park_var.iq_inv*50*2*3.14*0.0043;
+    current_var.vq_star = current_var.piq[0] + park_var.vq_inv  + \
+                        park_var.id_inv*50*2*3.14*0.0043;
+
+    Vddd = park_var.id_inv;
+    Vqqq = park_var.iq_inv;
+
+    //
+
+    UA = current_var.vd_star*CLAcos(pll.theta[0])   - \
+         current_var.vq_star*CLAsin(pll.theta[0]);
+    UB = current_var.vq_star*CLAcos(pll.theta[0])   + \
+         current_var.vd_star*CLAsin(pll.theta[0]);
+
+#endif
+
+
+
+
+
+
+    /*old code for test*/
+
+/*
+    UA = 40*CLAsin(angle);
+    UB = 40*CLAsin(angle + 1.57079632679f);
+
+
+    angle = angle + 0.01570796326f; // 50hz
     if(angle > 6.28318530718f) angle = -6.28318530718f;
+*/
+
 
 }
 
 
 __attribute__((interrupt)) void Cla1Task2(void)
 {
+
+
 }
 __attribute__((interrupt)) void Cla1Task3(void)
 {
@@ -75,33 +266,41 @@ __attribute__((interrupt)) void Cla1Task7(void)
 {
 
 }
+
+
+// init function
 __attribute__((interrupt)) void Cla1Task8(void)
 {
 
-    UA = 0;
-    UB = 0;
+    pll.fo = 0;
+    pll.input_alpha = 0;
+    pll.input_beta = 0;
+    pll.theta[0]    = 0;
+    pll.theta[1]    = 0;
+    pll.u_D[0]      = 0;
+    pll.u_D[1]      = 0;
+    pll.u_Q[0]      = 0;
+    pll.u_Q[1]      = 0;
+    pll.ylf[0]      = 0;
+    pll.ylf[1]      = 0;
 
-    angle = -6.28318530718;
-    adcValue.TIDA_IA = 0;
-    adcValue.TIDA_IB = 0;
-    adcValue.TIDA_IC = 0;
-
-    adcValue.TIDA_VDC_BUS = 0;
-    adcValue.TIDA_UINV_A  = 0;
-    adcValue.TIDA_UINV_B  = 0;
-    adcValue.TIDA_UINV_C  = 0;
-
-    adcValue.TIDA_UGRID_A = 0;
-    adcValue.TIDA_UGRID_B = 0;
-    adcValue.TIDA_UGRID_C = 0;
-
+    current_var.eid[0]   = 0;
+    current_var.eid[1]   = 0;
+    current_var.eiq[0]   = 0;
+    current_var.eiq[1]   = 0;
+    current_var.id_star = 0;
+    current_var.iq_star = 0;
+    current_var.vd_star = 0;
+    current_var.vq_star = 0;
+    current_var.pid[0]  = 0;
+    current_var.piq[0]  = 0;
+    current_var.pid[1]  = 0;
+    current_var.piq[1]  = 0;
 
 
-    adcValue.TIDA_TEMPAMP = 0;
+//   __mdebugstop();
 
-    adcValue.TIDA_TEMPA = 0;
-    adcValue.TIDA_TEMPB = 0;
-    adcValue.TIDA_TEMPC = 0;
+
 
 
 

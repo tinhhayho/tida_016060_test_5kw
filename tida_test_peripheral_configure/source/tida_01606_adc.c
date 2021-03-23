@@ -103,7 +103,7 @@ void tida_setupADC(void)
     AdcbRegs.ADCSOC13CTL.bit.CHSEL   = TIDA_TEMPAMP_PIN;
     AdcbRegs.ADCSOC13CTL.bit.ACQPS   = TIDA_TEMPAMP_ACQPS;
     //
-    // adc c : IB, VINB, VGRIDB // chua sua 
+    // adc c : IB, VINB, VGRIDB 
     //
     AdccRegs.ADCSOC1CTL.bit.TRIGSEL = TIDA_IB_TRIGGER_SOURCE;
     AdccRegs.ADCSOC1CTL.bit.CHSEL   = TIDA_IB_PIN;
@@ -117,7 +117,7 @@ void tida_setupADC(void)
     AdccRegs.ADCSOC7CTL.bit.CHSEL   = TIDA_UB_INV_PIN;
     AdccRegs.ADCSOC7CTL.bit.ACQPS   = TIDA_UB_INV_ACQPS;
     //
-    // adc d : IC, VINC, VGRIDC // chua sua
+    // adc d : IC, VINC, VGRIDC  , VBUS
     //
     AdcdRegs.ADCSOC2CTL.bit.TRIGSEL = TIDA_IC_TRIGGER_SOURCE;
     AdcdRegs.ADCSOC2CTL.bit.CHSEL   = TIDA_IC_PIN;
@@ -131,9 +131,11 @@ void tida_setupADC(void)
     AdcdRegs.ADCSOC8CTL.bit.CHSEL   = TIDA_UC_INV_PIN;
     AdcdRegs.ADCSOC8CTL.bit.ACQPS   = TIDA_UC_INV_ACQPS;
 
+    (*((volatile Uint32 *)(Uint32)(0x00007580 + 0x22)))    |=  TIDA_VBUS_ACQPS;
+//    AdccRegs.ADCSOC9CTL.bit.ACQPS   = TIDA_VBUS_ACQPS;
     AdcdRegs.ADCSOC9CTL.bit.TRIGSEL = TIDA_VBUS_TRIGGER_SOURCE;
     AdcdRegs.ADCSOC9CTL.bit.CHSEL   = TIDA_VBUS_PIN;
-    AdccRegs.ADCSOC9CTL.bit.ACQPS   = TIDA_VBUS_ACQPS;
+
     //
     //set interrupt adcd int4
     //
@@ -142,7 +144,15 @@ void tida_setupADC(void)
     AdcdRegs.ADCINTSEL3N4.bit.INT4SEL   = TIDA_INT4_SEL;
     // make sure interrupt flag clear 
     AdcdRegs.ADCINTFLGCLR.bit.ADCINT4   = 1;
+    /*
+    // pie vector 
+    PieVectTable.ADCD4_INT              = &adcIsr1;
+    PieCtrlRegs.PIEIER10.bit.INTx16     = 1;
+    // cpu level
+    IER                                 |= M_INT10;
+    */
     EDIS;
+
 
 }
 

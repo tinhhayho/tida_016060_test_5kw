@@ -41,13 +41,13 @@ int16_t svm_gen(INPUT_SVM *input,
 {
     // ham chon sector
     int i = Seclect_sector_subsector(input, csector);
-    if ( i < 0) __asm ("      ESTOP0");
+//    if ( i < 0) __asm ("      ESTOP0");
     // ham tinh toan ta tb tc
     i = Calculate_time_vector( input, time_vector, csector);
-    if ( i < 0) __asm ("      ESTOP0");
+//    if ( i < 0) __asm ("      ESTOP0");
     // ham tinh toan thoi gian out
     i = Calculate_time_out(csector, time_vector, time_out);
-    if ( i < 0) __asm ("      ESTOP0");
+//    if ( i < 0) __asm ("      ESTOP0");
     // nam thoi gian cho thanh ghi
     Assign_ePWM_counter(time_out, epwm_counter);
     return 1;

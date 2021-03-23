@@ -15,10 +15,20 @@
 
 #include "tida_01606_CLA.h"
 #include "svm_gen.h"
+#include "math.h"
 
+
+#define _TEST_UDC_AND_TEMP_     1
+#define _TEST_SENSOR_I_INV_     1
+#define _TEST_SENSOR_U_GRID_    1
+#define _TEST_SENSOR_U_CAP_     1
 
 
 #ifdef  _RAM_LOAD_TEST_OPEN_LOOP_
+
+#define offset1 1.65f
+#define offset2 1.65f
+#define offset3 1.65f
 
 //
 //define variable for CLA function
@@ -27,31 +37,68 @@
 #pragma DATA_SECTION(Xn, "CpuToCla1MsgRAM")
 float Xn;
 
-#pragma DATA_SECTION(i, "CpuToCla1MsgRAM")
-Uint32 i;
 
 #pragma DATA_SECTION(j, "CpuToCla1MsgRAM")
 Uint32 j;
-
-
-
+#pragma DATA_SECTION(pll, "Cla1ToCpuMsgRAM")
+PLL pll;
 #pragma DATA_SECTION(UA, "Cla1ToCpuMsgRAM")
+
 float UA;
 #pragma DATA_SECTION(UB, "Cla1ToCpuMsgRAM")
 float UB;
+
+#pragma DATA_SECTION(Vddd, "Cla1ToCpuMsgRAM")
+float Vddd;
+#pragma DATA_SECTION(Vqqq, "Cla1ToCpuMsgRAM")
+float Vqqq;
+
 #pragma DATA_SECTION(angle, "Cla1ToCpuMsgRAM")
 float angle;
+
+
+#pragma DATA_SECTION(set_point, "CpuToCla1MsgRAM")
+float set_point;
+
 #pragma DATA_SECTION(data_analysis, "Test_memory")
 float data_analysis[buffer_size];
 
 
-#pragma DATA_SECTION(adcValue, "Cla1ToCpuMsgRAM")
+#pragma DATA_SECTION(adcValue, "CpuToCla1MsgRAM")
 CLA_ADC_VALUE adcValue;
 
 Uint16 a = 0;
 
+Uint32 ez = 0;
+
+typedef struct {
+    float offsetUdc;
+    float GainUdc;
+    float offsetUga;
+    float GainUga;
+    float offsetUgb;
+    float GainUgb;
+    float offsetUgc;
+    float GainUgc;
+}Adc_parameter;
+Adc_parameter adc_param ;
 
 
+typedef struct {
+    float Vin;
+    float Threshold;
+    float Vrms;
+    float Vacc_rms;
+    float curr_sample;
+    Uint16 prev_sign;
+    Uint16 curr_sign;
+    Uint16 nsample;
+} Analyzer;
+
+#define NsampleMin  250
+#define NsampleMax  450
+
+Analyzer    analyzer ;
 //
 // Task 1 (C) Variables
 //
@@ -120,6 +167,14 @@ extern tida_01606_protection_value *pvalue_protect ;
 
 void configCLAMemory(void)
 {
+
+#ifdef _FLASH
+    //
+    // Copy over code from FLASH to RAM
+    //
+    memcpy((uint32_t *)&Cla1ProgRunStart, (uint32_t *)&Cla1ProgLoadStart,
+           (uint32_t)&Cla1ProgLoadSize);
+#endif //_FLASH
     
     EALLOW;
     //
@@ -135,34 +190,32 @@ void configCLAMemory(void)
     {
     }
 
-    //
-    // Select LS0RAM and LS1RAM to be program space for the CLA
-    // First, configure the CLA to be the master for LS0 and LS1
-    // Second, set the space to be a program block
-    //
+    //gram ls4-5 for cla program
+    // 1 for progarn space
+    // 0 for data space
+
+
+    //data ls0-1
+
     MemCfgRegs.LSxMSEL.bit.MSEL_LS0 = 1;
-    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS0 = 1;
-	
+    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS0 = 0;
+
     MemCfgRegs.LSxMSEL.bit.MSEL_LS1 = 1;
-    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS1 = 1;
+    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS1 = 0;
 
     MemCfgRegs.LSxMSEL.bit.MSEL_LS2 = 1;
-    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS2 = 1;
+    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS2 = 0;
+
 
     MemCfgRegs.LSxMSEL.bit.MSEL_LS3 = 1;
     MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS3 = 1;
-    //
-    // Configure RAM blocks LS2-LS5 as data spaces for the CLA
-    // First, configure the CLA to be the master for LSx
-    // Second, set the spaces to be code blocks
-    //
-
 
     MemCfgRegs.LSxMSEL.bit.MSEL_LS4 = 1;
-    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS4 = 0;
+    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS4 = 1;
 
     MemCfgRegs.LSxMSEL.bit.MSEL_LS5 = 1;
-    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS5 = 0;
+    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS5 = 1;
+
 
     EDIS;
 }
@@ -198,8 +251,9 @@ void initCPU1CLA1(void)
 
     //
     //set adcd.4 as the trigger for task 1
+    // rewrite : -> task 1 trigger by software
     //
-    DmaClaSrcSelRegs.CLA1TASKSRCSEL1.bit.TASK1  = 19;
+    //DmaClaSrcSelRegs.CLA1TASKSRCSEL1.bit.TASK1  = 19;
 
     EDIS;
 }
@@ -246,24 +300,14 @@ __interrupt void cla1Isr1 ()
     //  clear the adc interrupt flag so the next SOC can occur
     //  clear the PIEACK bits so another interrupt can be taken
     //
-    AdcdRegs.ADCINTFLGCLR.bit.ADCINT4   = 1;
-    PieCtrlRegs.PIEACK.all = M_INT10|M_INT11;
 
 
-    if (j)
-    {
-        data_analysis[i] = adcValue.TIDA_UGRID_A;
-        //asm(" ESTOP0");
-    }
-    else
-    {
-        ;
-    }
-    i++;
-    if (i>4095)
-    {
-        i = 0;
-    }
+
+
+
+
+
+
 
     EALLOW;
     if(a)
@@ -276,17 +320,30 @@ __interrupt void cla1Isr1 ()
     }
     EDIS;
 
-    pinput->ua = UA;
-    pinput->ub = UB;
-    svm_gen(pinput, psector, ptime_v, ptime_out, pepwm_count);
+
+    if(adcValue.TIDA_VDC_BUS <= 50)
+    {
+        pinput->ua  = 0;
+        pinput->ub  = 0;
+    }
+    else
+    {
+        pinput->udc     = 100/1.73205;
+        pinput->ua = UA;
+        pinput->ub = UB;
+        svm_gen(pinput, psector, ptime_v, ptime_out, pepwm_count);
+    }
+
+
 
     EALLOW;
-    GpioDataRegs.GPBTOGGLE.bit.GPIO35 = 1;
+
+    GpioDataRegs.GPBCLEAR.bit.GPIO35  = 1;
     EDIS;
 
+    PieCtrlRegs.PIEACK.all = M_INT11;
 
 
-//    asm(" ESTOP0");
 }
 
 //
@@ -294,7 +351,8 @@ __interrupt void cla1Isr1 ()
 //
 __interrupt void cla1Isr2 ()
 {
-    asm(" ESTOP0");
+    PieCtrlRegs.PIEACK.all = M_INT11;
+
 }
 
 //
@@ -342,14 +400,15 @@ __interrupt void cla1Isr7 ()
 //
 __interrupt void cla1Isr8 ()
 {
+
     //
     // Acknowledge the end-of-task interrupt for task 8
     //
-    pinput->udc = 200/1.732;
+//    pinput->udc = 200/1.732;
     PieCtrlRegs.PIEACK.all = M_INT11;
 
 
-//    asm(" ESTOP0");
+
     //
     //  init data
     //
@@ -357,17 +416,174 @@ __interrupt void cla1Isr8 ()
 }
 
 
+
+
+
+
+__interrupt void adcIsr1()
+{
+
+    AdcdRegs.ADCINTFLGCLR.bit.ADCINT4   = 1;
+    PieCtrlRegs.PIEACK.all = M_INT10;
+
+
+}
+
+
+
+
+
 #ifdef _TEST_SPEED_
 
 __interrupt void epwm1ISR(void)
 {
+
+
     EALLOW;
-    GpioDataRegs.GPBTOGGLE.bit.GPIO35 = 1;
+//    GpioDataRegs.GPBTOGGLE.bit.GPIO35 = 1;
+    GpioDataRegs.GPBSET.bit.GPIO35    = 1;
     EDIS;
-    pstate_protect->isFaultA  = GpioDataRegs.GPBDAT.bit.GPIO32;
-    pstate_protect->isFaultB  = GpioDataRegs.GPBDAT.bit.GPIO33;
-    pstate_protect->isFaultC  = GpioDataRegs.GPBDAT.bit.GPIO40;
-    pstate_protect->isRYA     = GpioDataRegs.GPADAT.bit.GPIO26;
+#ifdef _TEST_SENSOR_I_INV_
+    // iir filter
+
+
+     adcValue.TIDA_IA = (RESULT_IA - 1.702)*32;
+     adcValue.TIDA_IB = (RESULT_IB - 1.702)*32;
+     adcValue.TIDA_IC = (RESULT_IC - 1.702)*32;
+
+
+#endif
+
+#ifdef _TEST_SENSOR_U_GRID_
+
+
+    adcValue.TIDA_UGRID_A = (RESULT_VGRID_A-1.65)*-272.773f;
+    adcValue.TIDA_UGRID_B = (RESULT_VGRID_B-1.65)*-292.773f;
+    adcValue.TIDA_UGRID_C = (RESULT_VGRID_C-1.65)*-272.773f;
+
+#endif
+
+#ifdef _TEST_SENSOR_U_CAP_
+
+
+
+
+    adcValue.TIDA_UINV_A  = (RESULT_VINV_A-1.65)*-272.773f;
+    adcValue.TIDA_UINV_B  = (RESULT_VINV_B-1.65)*-290.773f;
+    adcValue.TIDA_UINV_C  = (RESULT_VINV_C-1.65)*-270.773f;
+
+
+#endif
+
+#ifdef _TEST_UDC_AND_TEMP_
+
+
+    adcValue.TIDA_TEMPA = RESULT_TEMPA;
+    adcValue.TIDA_TEMPB = RESULT_TEMPB;
+    adcValue.TIDA_TEMPC = RESULT_TEMPC;
+    adcValue.TIDA_TEMPAMP  = RESULT_TEMPAMB;
+
+    adcValue.TIDA_VDC_BUS = (RESULT_VBUS-0.439415097f)*578.230531246982f;
+
+
+#endif
+
+    // end conversion adc value
+    // start algorithm
+
+    Cla1ForceTask1();
+
+
+
+    //
+    //  clear the adc interrupt flag so the next SOC can occur
+    //  clear the PIEACK bits so another interrupt can be taken
+    //
+
+
+    if (j)
+    {
+        data_analysis[ez] = adcValue.TIDA_IA;
+        //asm(" ESTOP0");
+        data_analysis[ez+800] = adcValue.TIDA_IB;
+        data_analysis[ez+1600] = adcValue.TIDA_IC;
+        ez++;
+    }
+
+
+    if(ez >= 800)
+    {
+        asm(" ESTOP0");
+
+        float gain1, gain2, gain3 ;
+        float tb1, tb2, tb3;
+        tb1 =0;tb2 = 0;tb3 = 0;
+        gain1 = 0; gain2 =0; gain3 = 0;
+        int dem;
+        for( dem = 0; dem < 800; dem++)
+        {
+            tb1 += data_analysis[dem];
+            tb2 += data_analysis[dem+800];
+            tb3 += data_analysis[dem+1600];
+        }
+        tb1 = tb1/800;
+        tb2 = tb2/800;
+        tb3 = tb3/800;
+
+
+
+        // tinh binh phuong
+        for(dem = 0; dem < 800; dem++)
+        {
+            data_analysis[dem] = data_analysis[dem] - offset1;
+            data_analysis[dem] = data_analysis[dem]*data_analysis[dem];
+
+            data_analysis[dem+800] = data_analysis[dem+800] - offset2;
+            data_analysis[dem+800] = data_analysis[dem+800]*data_analysis[dem+800];
+
+            data_analysis[dem+1600] = data_analysis[dem+1600] - offset3;
+            data_analysis[dem+1600] = data_analysis[dem+1600]*data_analysis[dem+1600];
+        }
+        for(dem = 0; dem < 800; dem++)
+        {
+            gain1 += data_analysis[dem];
+            gain2 += data_analysis[dem+800];
+            gain3 += data_analysis[dem+1600];
+        }
+        gain1 = sqrt(gain1/800);
+        gain2 = sqrt(gain2/800);
+        gain3 = sqrt(gain3/800);
+
+
+
+
+    }
+
+
+
+    EALLOW;
+    if(a)
+    {
+        GpioDataRegs.GPBSET.bit.GPIO43 = 1;
+        GpioDataRegs.GPBSET.bit.GPIO34  = 1;
+        GpioDataRegs.GPBSET.bit.GPIO39  = 1;
+        GpioDataRegs.GPBSET.bit.GPIO44  = 1;
+    }
+    else
+    {
+        GpioDataRegs.GPBCLEAR.bit.GPIO43 = 1;
+        GpioDataRegs.GPBCLEAR.bit.GPIO34  = 1;
+        GpioDataRegs.GPBCLEAR.bit.GPIO39  = 1;
+        GpioDataRegs.GPBCLEAR.bit.GPIO44  = 1;
+
+    }
+    EDIS;
+
+
+
+
+
+
 
     //
     // Clear INT flag for this timer

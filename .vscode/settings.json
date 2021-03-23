@@ -1,6 +1,12 @@
 {
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
-        "tida_01606_cla.h": "c"
+        "tida_01606_cla.h": "c",
+        "tida_01606_sdfm.h": "c",
+        "f2837xd_device.h": "c",
+        "f2837xd_sdfm.h": "c",
+        "f2837xd_output_xbar.h": "c",
+        "tida_01606_epwm_svm.h": "c",
+        "tida_01606_adc.h": "c"
     }
 }

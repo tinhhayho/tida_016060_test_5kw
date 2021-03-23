@@ -10,6 +10,7 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./DCL_PI_L1.obj" \
 "./F2837xD_Adc.obj" \
 "./F2837xD_CodeStartBranch.obj" \
 "./F2837xD_DefaultISR.obj" \
@@ -35,7 +36,7 @@ $(GEN_CMDS__FLAG) \
 -llibc.a \
 -lF2837xRevB_c1bootROM_CLADataROMSymbols_eabi_fpu32.lib \
 -lF2837xD_Headers_nonBIOS_cpu1.cmd \
--l2837xD_RAM_CLA_lnk_cpu1.cmd \
+-lflash_link_tida_01606.cmd \
 
 -include ../makefile.init
 
@@ -162,7 +163,7 @@ all: $(OBJS) $(GEN_CMDS)
 pelab_demo_tida_01606.out: $(OBJS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: C2000 Linker'
-	"C:/ti/ccs1000/ccs/tools/compiler/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --fp_mode=relaxed --advice:performance=all --define=CPU1 --define=_TEST_SPEED_ --define=_RAM_LOAD_TEST_OPEN_LOOP_ --define=CLA_MATH_TABLES_IN_ROM=1 --define=_TEST_OPEN_LOOP_ -g --diag_suppress=10063 --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"pelab_demo_tida_01606.map" --stack_size=0x200 --warn_sections -i"C:/ti/ccs1000/ccs/tools/compiler/lib" -i"C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/Lib" -i"C:/ti/ccs1000/ccs/tools/compiler/include" -i"C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/header/cmd" -i"C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/cmd" --reread_libs --define=CLA_C --define=CLA_MATH_TABLES_IN_ROM --diag_wrap=off --display_error_number --xml_link_info="pelab_demo_tida_01606_linkInfo.xml" --entry_point=code_start --rom_model -o "pelab_demo_tida_01606.out" $(ORDERED_OBJS)
+	"C:/ti/ccs1000/ccs/tools/compiler/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --fp_mode=relaxed --advice:performance=all --define=CPU1 --define=_FLASH --define=_TEST_SPEED_ --define=_RAM_LOAD_TEST_OPEN_LOOP_ --define=CLA_MATH_TABLES_IN_ROM=1 --define=_TEST_OPEN_LOOP_ -g --diag_suppress=10063 --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"pelab_demo_tida_01606.map" --stack_size=0x200 --warn_sections -i"C:/ti/ccs1000/ccs/tools/compiler/lib" -i"C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/Lib" -i"C:/ti/ccs1000/ccs/tools/compiler/include" -i"C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/header/cmd" -i"C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/cmd" --reread_libs --define=CLA_C --define=_FLASH --define=CLA_MATH_TABLES_IN_ROM --diag_wrap=off --display_error_number --xml_link_info="pelab_demo_tida_01606_linkInfo.xml" --entry_point=code_start --rom_model -o "pelab_demo_tida_01606.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
@@ -176,10 +177,10 @@ pelab_demo_tida_01606.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "F2837xD_Adc.obj" "F2837xD_CodeStartBranch.obj" "F2837xD_DefaultISR.obj" "F2837xD_GlobalVariableDefs.obj" "F2837xD_Gpio.obj" "F2837xD_PieCtrl.obj" "F2837xD_PieVect.obj" "F2837xD_SysCtrl.obj" "F2837xD_usDelay.obj" "data_fft.obj" "main.obj" "svm_gen.obj" "tida_01606_CLA.obj" "tida_01606_Relay_Fan_control.obj" "tida_01606_SDFM.obj" "tida_01606_adc.obj" "tida_01606_comparator_subsystem.obj" "tida_01606_ePWM_power_driver_card.obj" "tida_01606_ePWM_svm.obj" "tida_01606_protection.obj" 
+	-$(RM) "DCL_PI_L1.obj" "F2837xD_Adc.obj" "F2837xD_CodeStartBranch.obj" "F2837xD_DefaultISR.obj" "F2837xD_GlobalVariableDefs.obj" "F2837xD_Gpio.obj" "F2837xD_PieCtrl.obj" "F2837xD_PieVect.obj" "F2837xD_SysCtrl.obj" "F2837xD_usDelay.obj" "data_fft.obj" "main.obj" "svm_gen.obj" "tida_01606_CLA.obj" "tida_01606_Relay_Fan_control.obj" "tida_01606_SDFM.obj" "tida_01606_adc.obj" "tida_01606_comparator_subsystem.obj" "tida_01606_ePWM_power_driver_card.obj" "tida_01606_ePWM_svm.obj" "tida_01606_protection.obj" 
 	-$(RM) "F2837xD_Adc.d" "F2837xD_DefaultISR.d" "F2837xD_GlobalVariableDefs.d" "F2837xD_Gpio.d" "F2837xD_PieCtrl.d" "F2837xD_PieVect.d" "F2837xD_SysCtrl.d" "data_fft.d" "main.d" "svm_gen.d" "tida_01606_Relay_Fan_control.d" "tida_01606_SDFM.d" "tida_01606_adc.d" "tida_01606_comparator_subsystem.d" "tida_01606_ePWM_power_driver_card.d" "tida_01606_ePWM_svm.d" "tida_01606_protection.d" 
 	-$(RM) "tida_01606_CLA.d" 
-	-$(RM) "F2837xD_CodeStartBranch.d" "F2837xD_usDelay.d" 
+	-$(RM) "DCL_PI_L1.d" "F2837xD_CodeStartBranch.d" "F2837xD_usDelay.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

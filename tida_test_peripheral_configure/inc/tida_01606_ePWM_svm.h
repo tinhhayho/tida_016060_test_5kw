@@ -52,7 +52,9 @@
 
 #define TIDA_EPWM_QX_INT_CMP                        (Uint32)1000 // for test
 
-
+#define TIDA_SDFM_CLK                           20000000U
+#define TIDA_EPWM_SDFM_PERIOD                   (Uint32)TIDA_EPWM_QX_CLK_IN/            \
+                                                TIDA_SDFM_CLK
 //
 //gpio parameter
 //
@@ -102,6 +104,7 @@
 
 #define TIDA_EPWM_ET_SOCA_ENA              1
 #define TIDA_EPWM_ET_SOCA_CTR_ZERO         1
+#define TIDA_EPWM_ET_SOCA_CTR_PRD          2
 #define TIDA_EPWM_ET_SOCA_PRESCALE         1
 #define TIDA_EPWM_ET_INTEN_ENA             1
 #define TIDA_EPWM_ET_INTTE_DIS             0

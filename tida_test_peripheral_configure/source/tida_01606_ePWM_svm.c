@@ -116,6 +116,13 @@ void tida_setup_ePWM_Q(void)
 
 }
 
+void tida_SDFM_simple(Uint32 base_address)
+{
+    tida_epwm_simple_TB(base_address);
+    //
+    tida_epwm_simple_CC(base_address);
+
+}
 
 
 
@@ -202,6 +209,20 @@ void tida_epwm_simple_CC(Uint32 base_address)
                             ((TIDA_EPWM_QX_INT_CMP<<16));
 }
 
+
+void tida_epwm_SDFM_CC(Uint32 base_address)
+{
+    HWREGH(base_address + EPWM_O_CMPCTL) |=                                \
+                            ((TIDA_EPWM_CMP_LOAD_EVENT_CTR_0_PERIOD))      ;
+    HWREG(base_address + EPWM_O_CMPC)   |=                                 \
+                            ((TIDA_EPWM_QX_INT_CMP<<16));
+    HWREG(base_address + EPWM_O_CMPB)   |=                                 \
+                            ((TIDA_EPWM_QX_INT_CMP<<16));
+
+}
+
+
+
 void tida_epwm_simple_AQ(Uint32 base_address)
 {
     //
@@ -251,7 +272,7 @@ void tida_epwm_simple_DB_notswap(Uint32 base_address)
         - S1 = 1 and S0 = 1 
         - S6 = 0 and S7 = 0
     */
-    HWREGH(base_address  + EPWM_O_DBCTL)     |=                   \
+    HWREGH(base_address  + EPWM_O_DBCTL)     |=                  \
                                 ((TIDA_EPWM_DB_OUTPUT_FULL_EN)  |\
                                 (TIDA_EPWM_DB_POLARITY_AHC<<2)  |\
                                 (TIDA_EPWM_DB_IN_MODE_EPWMA<<4) |\
@@ -309,11 +330,11 @@ void tida_epwm_simple_DB_swap(Uint32 base_address)
 }
 
 
-
+// this function configure for ADC_trigger
 void tida_epwm_simple_ET(Uint32 base_address)
 {
     HWREGH(base_address + EPWM_O_ETSEL)     |=                      \
-                                ((TIDA_EPWM_ET_SOCA_CTR_ZERO<<8)   |\
+                                ((TIDA_EPWM_ET_SOCA_CTR_PRD<<8)   |\
                                 (TIDA_EPWM_ET_SOCA_ENA<<11));
     HWREGH(base_address + EPWM_O_ETPS)      |=                      \
                                 (TIDA_EPWM_ET_SOCA_PRESCALE<<8);

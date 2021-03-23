@@ -19,16 +19,85 @@
 
 #include "F2837xD_Cla_defines.h"
 #include "CLAmath.h"
-
+#include "DCLCLA.h"
 
 #include "svm_gen.h"
 
 
 
 
+typedef struct {
+    float Ua_input;
+    float Ub_input;
+    float B0;
+    float B1;
+    float fre_normal;
+    float fre_pll;
+    float Ts;
+    float ylf0;
+    float ylf1;
+    float vd_pll;
+    float vq_pll;
+    float vq_pll_1;
+    float theta;
+    float theta_1;
+
+}PLL_var;
+
+typedef struct {
+    float i_inv_alpha;
+    float i_inv_beta;
+
+    //
+    float v_inv_alpha;
+    float v_inv_beta;
+
+    //
+    float v_grid_alpha;
+    float v_grid_beta;
+
+}CLARKE_var;
+
+typedef struct {
+    float id_inv;
+    float iq_inv;
+    //
+    float vd_inv;
+    float vq_inv;
+}PARK_var;
 
 
-#define buffer_size             4096 //2^12
+
+typedef struct {
+    float eid[2];
+    float eiq[2];
+    float pid[2];
+    float piq[2];
+    float id_star;
+    float iq_star;
+    float vd_star;
+    float vq_star;
+}CURRENT_LOOP_var;
+
+
+typedef struct {
+    float u[3];
+    float osg_u[3];
+    float osg_qu[3];
+}SOGI_;
+
+typedef struct {
+    float u_Q[2];
+    float u_D[2];
+    float input_alpha;
+    float input_beta;
+    float ylf[2];
+    float fo;
+    float theta[2];
+}PLL;
+
+
+#define buffer_size             2400 //2^12
 
 
 
@@ -42,11 +111,16 @@ extern float Xn;
 extern CLA_ADC_VALUE adcValue;
 extern float UA;
 extern float UB;
+extern float Vddd;
+extern float Vqqq;
+
 extern float angle;
-extern Uint32 i;
+extern float set_point;
+
+extern Uint32 ez;
 extern Uint32 j;
 extern float data_analysis[buffer_size];
-
+extern PLL pll;
 
 //
 // function prototype
@@ -148,31 +222,28 @@ extern __attribute__((interrupt)) void Cla1Task8(void);
 #define TIDA_ADCD_RESULT_BASE_ADDRESS       0x0B60
 
 
-#define RESULT_IA_CLA                 CLAdiv(*(char*)(0x0B00)*TIDA_VREF_HIGH_,4096.0f)
-#define RESULT_VGRID_A_CLA            CLAdiv(*(char*)(0x0B03)*TIDA_VREF_HIGH_,4096.0f)
-#define RESULT_VINV_A_CLA             CLAdiv(*(char*)(0x0B06)*TIDA_VREF_HIGH_,4096.0f)
-
-#define RESULT_IB_CLA                 CLAdiv(*(char*)(0x0B41)*TIDA_VREF_HIGH_,4096.0f)
-#define RESULT_VGRID_B_CLA            CLAdiv(*(char*)(0x0B44)*TIDA_VREF_HIGH_,4096.0f)
-#define RESULT_VINV_B_CLA             CLAdiv(*(char*)(0x0B47)*TIDA_VREF_HIGH_,4096.0f)
 
 
-#define RESULT_IC_CLA                 CLAdiv(*(char*)(0x0B62)*TIDA_VREF_HIGH_,4096.0f)
-#define RESULT_VGRID_C_CLA            CLAdiv(*(char*)(0x0B65)*TIDA_VREF_HIGH_,4096.0f)
-#define RESULT_VINV_C_CLA             CLAdiv(*(char*)(0x0B68)*TIDA_VREF_HIGH_,4096.0f)
+//----------------
+#define RESULT_IA                 (float)(AdcaResultRegs.ADCRESULT0*TIDA_VREF_HIGH_/4096)
+#define RESULT_VGRID_A            (float)(AdcaResultRegs.ADCRESULT3*TIDA_VREF_HIGH_/4096)
+#define RESULT_VINV_A             (float)(AdcaResultRegs.ADCRESULT6*TIDA_VREF_HIGH_/4096)
 
-#define RESULT_VBUS_CLA               CLAdiv(*(char*)(0x0B69)*TIDA_VREF_HIGH_,4096.0f)
-
-#define RESULT_TEMPA_CLA              CLAdiv(*(char*)(0x0B2A)*TIDA_VREF_HIGH_,4096.0f)
-#define RESULT_TEMPB_CLA              CLAdiv(*(char*)(0x0B2B)*TIDA_VREF_HIGH_,4096.0f)
-#define RESULT_TEMPC_CLA              CLAdiv(*(char*)(0x0B2C)*TIDA_VREF_HIGH_,4096.0f)
-#define RESULT_TEMPAMB_CLA            CLAdiv(*(char*)(0x0B2D)*TIDA_VREF_HIGH_,4096.0f)
+#define RESULT_IB                 (float)(AdccResultRegs.ADCRESULT1*TIDA_VREF_HIGH_/4096)
+#define RESULT_VGRID_B            (float)(AdccResultRegs.ADCRESULT4*TIDA_VREF_HIGH_/4096)
+#define RESULT_VINV_B             (float)(AdccResultRegs.ADCRESULT7*TIDA_VREF_HIGH_/4096)
 
 
+#define RESULT_IC                 (float)(AdcdResultRegs.ADCRESULT2*TIDA_VREF_HIGH_/4096)
+#define RESULT_VGRID_C            (float)(AdcdResultRegs.ADCRESULT5*TIDA_VREF_HIGH_/4096)
+#define RESULT_VINV_C             (float)(AdcdResultRegs.ADCRESULT8*TIDA_VREF_HIGH_/4096)
 
+#define RESULT_VBUS               (float)(AdcdResultRegs.ADCRESULT9*TIDA_VREF_HIGH_/4096)
 
-
-
+#define RESULT_TEMPA              (float)(AdcbResultRegs.ADCRESULT10*TIDA_VREF_HIGH_/4096)
+#define RESULT_TEMPB              (float)(AdcbResultRegs.ADCRESULT11*TIDA_VREF_HIGH_/4096)
+#define RESULT_TEMPC              (float)(AdcbResultRegs.ADCRESULT12*TIDA_VREF_HIGH_/4096)
+#define RESULT_TEMPAMB            (float)(AdcbResultRegs.ADCRESULT13*TIDA_VREF_HIGH_/4096)
 
 
 

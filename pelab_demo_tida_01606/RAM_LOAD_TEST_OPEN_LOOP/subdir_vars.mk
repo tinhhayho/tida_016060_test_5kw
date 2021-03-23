@@ -9,6 +9,7 @@ CLA_SRCS += \
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/source/tida_01606_CLA.cla 
 
 ASM_SRCS += \
+C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/Lib/DCL_lib/DCL_PI_L1.asm \
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/source/F2837xD_CodeStartBranch.asm \
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/source/F2837xD_usDelay.asm 
 
@@ -54,6 +55,7 @@ C_DEPS += \
 ./tida_01606_protection.d 
 
 OBJS += \
+./DCL_PI_L1.obj \
 ./F2837xD_Adc.obj \
 ./F2837xD_CodeStartBranch.obj \
 ./F2837xD_DefaultISR.obj \
@@ -76,10 +78,12 @@ OBJS += \
 ./tida_01606_protection.obj 
 
 ASM_DEPS += \
+./DCL_PI_L1.d \
 ./F2837xD_CodeStartBranch.d \
 ./F2837xD_usDelay.d 
 
 OBJS__QUOTED += \
+"DCL_PI_L1.obj" \
 "F2837xD_Adc.obj" \
 "F2837xD_CodeStartBranch.obj" \
 "F2837xD_DefaultISR.obj" \
@@ -124,8 +128,14 @@ CLA_DEPS__QUOTED += \
 "tida_01606_CLA.d" 
 
 ASM_DEPS__QUOTED += \
+"DCL_PI_L1.d" \
 "F2837xD_CodeStartBranch.d" \
 "F2837xD_usDelay.d" 
+
+ASM_SRCS__QUOTED += \
+"C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/Lib/DCL_lib/DCL_PI_L1.asm" \
+"C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/source/F2837xD_CodeStartBranch.asm" \
+"C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/source/F2837xD_usDelay.asm" 
 
 C_SRCS__QUOTED += \
 "C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/source/F2837xD_Adc.c" \
@@ -145,9 +155,5 @@ C_SRCS__QUOTED += \
 "C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/source/tida_01606_ePWM_power_driver_card.c" \
 "C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/source/tida_01606_ePWM_svm.c" \
 "C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/source/tida_01606_protection.c" 
-
-ASM_SRCS__QUOTED += \
-"C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/source/F2837xD_CodeStartBranch.asm" \
-"C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/source/F2837xD_usDelay.asm" 
 
 

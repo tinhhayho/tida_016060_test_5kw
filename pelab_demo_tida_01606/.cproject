@@ -39,6 +39,7 @@
 								<option id="com.ti.ccstudio.buildDefinitions.C2000_20.12.compilerID.TMU_SUPPORT.988282956" name="Specify TMU support (--tmu_support)" superClass="com.ti.ccstudio.buildDefinitions.C2000_20.12.compilerID.TMU_SUPPORT" value="com.ti.ccstudio.buildDefinitions.C2000_20.12.compilerID.TMU_SUPPORT.tmu0" valueType="enumerated"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.C2000_20.12.compilerID.INCLUDE_PATH.47607980" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.C2000_20.12.compilerID.INCLUDE_PATH" valueType="includePath">
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}"/>
+									<listOptionValue builtIn="false" value="${PARENT_LOC}/pelab_demo_tida_01606/TI_header_file/Lib_header"/>
 									<listOptionValue builtIn="false" value="${PARENT_LOC}/pelab_demo_tida_01606/TI_header_file/common/include"/>
 									<listOptionValue builtIn="false" value="${PARENT_LOC}/pelab_demo_tida_01606/tida_test_peripheral_configure/inc"/>
 									<listOptionValue builtIn="false" value="${PARENT_LOC}/pelab_demo_tida_01606/tida_test_algorithm_configure/inc"/>
@@ -48,6 +49,7 @@
 								<option id="com.ti.ccstudio.buildDefinitions.C2000_20.12.compilerID.ADVICE__PERFORMANCE.412580542" name="Provide advice on optimization techniques (--advice:performance)" superClass="com.ti.ccstudio.buildDefinitions.C2000_20.12.compilerID.ADVICE__PERFORMANCE" value="--advice:performance=all" valueType="string"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.C2000_20.12.compilerID.DEFINE.1150809035" name="Pre-define NAME (--define, -D)" superClass="com.ti.ccstudio.buildDefinitions.C2000_20.12.compilerID.DEFINE" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CPU1"/>
+									<listOptionValue builtIn="false" value="_FLASH"/>
 									<listOptionValue builtIn="false" value="_TEST_SPEED_"/>
 									<listOptionValue builtIn="false" value="_RAM_LOAD_TEST_OPEN_LOOP_"/>
 									<listOptionValue builtIn="false" value="CLA_MATH_TABLES_IN_ROM=1"/>
@@ -78,7 +80,7 @@
 									<listOptionValue builtIn="false" value="libc.a"/>
 									<listOptionValue builtIn="false" value="F2837xRevB_c1bootROM_CLADataROMSymbols_eabi_fpu32.lib"/>
 									<listOptionValue builtIn="false" value="F2837xD_Headers_nonBIOS_cpu1.cmd"/>
-									<listOptionValue builtIn="false" value="2837xD_RAM_CLA_lnk_cpu1.cmd"/>
+									<listOptionValue builtIn="false" value="flash_link_tida_01606.cmd"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.C2000_20.12.linkerID.SEARCH_PATH.137929038" name="Add &lt;dir&gt; to library search path (--search_path, -i)" superClass="com.ti.ccstudio.buildDefinitions.C2000_20.12.linkerID.SEARCH_PATH" valueType="libPaths">
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/lib"/>
@@ -93,6 +95,7 @@
 								<option id="com.ti.ccstudio.buildDefinitions.C2000_20.12.linkerID.ENTRY_POINT.1182343701" name="Specify program entry point for the output module (--entry_point, -e)" superClass="com.ti.ccstudio.buildDefinitions.C2000_20.12.linkerID.ENTRY_POINT" value="code_start" valueType="string"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.C2000_20.12.linkerID.DEFINE.866805071" name="Pre-define preprocessor macro _name_ to _value_ (--define)" superClass="com.ti.ccstudio.buildDefinitions.C2000_20.12.linkerID.DEFINE" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CLA_C"/>
+									<listOptionValue builtIn="false" value="_FLASH"/>
 									<listOptionValue builtIn="false" value="CLA_MATH_TABLES_IN_ROM"/>
 								</option>
 								<inputType id="com.ti.ccstudio.buildDefinitions.C2000_20.12.exeLinker.inputType__CMD_SRCS.1125459470" name="Linker Command Files" superClass="com.ti.ccstudio.buildDefinitions.C2000_20.12.exeLinker.inputType__CMD_SRCS"/>

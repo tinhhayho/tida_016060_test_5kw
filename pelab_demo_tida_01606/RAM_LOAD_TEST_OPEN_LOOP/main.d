@@ -59,7 +59,16 @@ main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_pe
 main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_CLA.h
 main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/include/F2837xD_Cla_defines.h
 main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/header/include/CLAmath.h
+main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/Lib_header/DCLCLA.h
+main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/Lib_header/DCL.h
+main.obj: C:/ti/ccs1000/ccs/tools/compiler/include/complex.h
+main.obj: C:/ti/ccs1000/ccs/tools/compiler/include/math.h
+main.obj: C:/ti/ccs1000/ccs/tools/compiler/include/_defs.h
+main.obj: C:/ti/ccs1000/ccs/tools/compiler/include/machine/_limits.h
+main.obj: C:/ti/ccs1000/ccs/tools/compiler/include/stdlib.h
+main.obj: C:/ti/ccs1000/ccs/tools/compiler/include/stdlibf.h
 main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_algorithm_configure/inc/svm_gen.h
+main.obj: C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_SDFM.h
 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/main_file/main.c: 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/main_file/main.h: 
@@ -120,4 +129,13 @@ C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_c
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_CLA.h: 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/common/include/F2837xD_Cla_defines.h: 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/header/include/CLAmath.h: 
+C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/Lib_header/DCLCLA.h: 
+C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/TI_header_file/Lib_header/DCL.h: 
+C:/ti/ccs1000/ccs/tools/compiler/include/complex.h: 
+C:/ti/ccs1000/ccs/tools/compiler/include/math.h: 
+C:/ti/ccs1000/ccs/tools/compiler/include/_defs.h: 
+C:/ti/ccs1000/ccs/tools/compiler/include/machine/_limits.h: 
+C:/ti/ccs1000/ccs/tools/compiler/include/stdlib.h: 
+C:/ti/ccs1000/ccs/tools/compiler/include/stdlibf.h: 
 C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_algorithm_configure/inc/svm_gen.h: 
+C:/Users/Tinh_deptrai/workspace_v10/pelab_demo_tida_01606/tida_test_peripheral_configure/inc/tida_01606_SDFM.h: 

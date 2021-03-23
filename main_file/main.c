@@ -2,7 +2,7 @@
 //
 //
 
-
+//#define _TEST_SDFM_ 1
 
 
 
@@ -35,12 +35,22 @@ void main(void)
     // protection fisrt
         Power_card_protect();
         tida_setup_relay();
+
     // CLA configure 
+
         configCLAMemory();
         initCPU1CLA1();
         initCLA1PIE();
+
     // adc
+#define _TEST_SDFM_
         tida_setupADC();
+#ifdef _TEST_SDFM_
+
+        tida_01606_eCap_setup_for_SDFM();
+
+
+#endif
     //******************important***************************//
     // disable epwm clock
         DisableEPWMclock();
@@ -49,14 +59,16 @@ void main(void)
 
         tida_setup_ePWM_power();
 
+
         tida_setup_ePWM_Q();
 
         EnableEPWMclock();
 
-
         EINT;
         ERTM;
-        Cla1ForceTask8();
+
+      Cla1ForceTask8();
+
     while(1)
     {
 
